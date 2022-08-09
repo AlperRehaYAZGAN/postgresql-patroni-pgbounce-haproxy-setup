@@ -1,0 +1,10 @@
+
+
+# patroni
+patroni.yml
+
+# pg_hba.conf
+pg_hba.conf
+
+# postgresql.conf
+pgtune-postgres.conf

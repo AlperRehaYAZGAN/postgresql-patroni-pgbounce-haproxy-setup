@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  pgnode:
+    user: postgres
+    build:
+      context: ./builder
+      dockerfile: Dockerfile
+    networks:
+      - pgbacknet
+    ports:
+      - "8008:8008"
+    #  - "5432:5432" # requests handled by pgbounce not postgres...
+    volumes:
+      - ./volumes:/var/lib/postgresql/data
+    environment:
+      TZ: Europe/Istanbul
+      PATRONI_NAME: pg_1 
+      PATRONI_POSTGRESQL_DATA_DIR: /var/lib/postgresql/data/pg1
+      PATRONI_CONSUL_HOST: ${CONSUL_URL} # http://127.0.0.1:8500
+      PATRONI_CONSUL_URL: ${CONSUL_URL}/v1/
+    restart: unless-stopped
+  # - pgbouncer
+  pgbouncer_1:
+    image: edoburu/pgbouncer:1.17.0
+    networks:
+      - pgbacknet
+    ports:
+      - "5432:5432"
+    depends_on:
+      - pgnode
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
+    restart: unless-stopped
+
+# network: pgbacknet
+networks:
+  pgbacknet:
+    name: pgbacknet
+    driver: bridge

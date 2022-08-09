@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  pglb:
+    image: haproxy:2.6-alpine
+    networks:
+      - pgfrontnet
+    volumes:
+      - ./config/:/usr/local/etc/haproxy
+    ports:
+      - "5432:5432" # for writer conn
+      - "5433:5433" # for reader conn
+    restart: unless-stopped
+
+# network: pgfrontnet
+networks:
+  pgfrontnet:
+    name: pgfrontnet
+    driver: bridge

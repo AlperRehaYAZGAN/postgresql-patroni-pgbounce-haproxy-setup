@@ -1,0 +1,19 @@
+# https://www.md5hashgenerator.com/ examplesite 
+# hash format is "md5" + md5(password + username)
+# create user MYDBUSER with encrypted password 'MYDBUSERPASS';
+# grant all privileges on database MYDB to MYDBUSER;
+# md5 is "MYDBUSERPGBOUNCESIDENAME" "md5e6e52413445d819d9bee387cfdb39837"
+[databases]
+mydb= host=pgnode port=5432 dbname=mydb user=MYDBUSER password=MYDBUSERPASS auth_user=MYDBUSERPGBOUNCESIDENAME
+
+[pgbouncer]
+listen_addr = *
+listen_port = 5432
+auth_type = md5  
+auth_file = /etc/pgbouncer/userlist.txt  
+admin_users = MYDBUSERPGBOUNCESIDENAME 
+pool_mode = transaction  
+max_client_conn = 250  
+default_pool_size = 20  
+# logfile = /some/location/pgbouncer.log  
+# pidfile = /some/location/pgbouncer.pid  
