@@ -14,5 +14,8 @@ COPY ./pgtune-postgres.conf /config/postgresql.conf
 COPY ./pg_hba.conf /config/pg_hba.conf
 RUN chown -R postgres:postgres /config
 
+# chown var lib 
+RUN chown -R postgres:postgres /var/lib/postgresql/data
+
 COPY ./patroni.yml /patroni.yml
 ENTRYPOINT ["patroni", "patroni.yml"]
